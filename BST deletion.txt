@@ -1,0 +1,64 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode * deleteInBST(TreeNode *root,int key)
+    {
+        if(root==NULL)
+        {
+            return NULL;
+        }
+        else if(key<root->val)
+        {
+            root->left=deleteInBST(root->left,key);
+            return root;
+        }
+        else if(key>root->val)
+        {
+            root->right=deleteInBST(root->right,key);
+            return root;
+        }
+        else{
+            if(root->left==NULL && root->right==NULL)
+            {
+                delete root;
+                return NULL;
+            }
+            else if(root->left==NULL && root->right!=NULL)
+            {
+                TreeNode *rightChild=root->right;
+                delete root;
+                    return rightChild;
+            }
+             else if(root->left!=NULL && root->right==NULL)
+            {
+                TreeNode *leftChild=root->left;
+                delete root;
+                    return leftChild;
+            }
+            else{
+                TreeNode *replace=root->right;
+                while(replace->left!=NULL)
+                {
+                    replace=replace->left;
+                }
+                root->val=replace->val;
+                root->right=deleteInBST(root->right,replace->val);
+                return root;
+            }
+        }
+        return NULL;
+    }
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        return deleteInBST(root,key);
+    }
+};

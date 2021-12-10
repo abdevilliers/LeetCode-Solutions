@@ -1,0 +1,59 @@
+class Solution {
+public:
+    map<pair<pair<int,bool>,bool>,long long int> dp;
+    long long int modval=(long long int)pow(10,9)+7;
+    long long int myHelper(int n,bool curTop,int curBot)
+    {
+        if(n<=0)
+        {
+            return 0;
+            
+        }
+        else if(n==1)
+        {
+            bool one=curTop && curBot;
+            bool two= (!curTop) && (!curBot);
+           return one | two;
+        }
+        
+        if(dp.count({{n,curTop},curBot})!=0)
+        {
+            return dp[{{n,curTop},curBot}];
+        }
+        
+        if(curTop && curBot)
+        {
+            long long int path1=0;long long int path2=0;long long int path3=0;long long int path4=0;
+            path1=myHelper(n-1,true,true);
+            path2=myHelper(n-1,false,false);
+            path3=myHelper(n-1,true,false);
+            path4=myHelper(n-1,false,true);
+            return dp[{{n,curTop},curBot}]=(path1+path2+path3+path4)%modval;
+        }
+        else if(curTop || curBot)
+        {
+            
+            if(curTop)
+            {
+                long long int path1=0;long long int path2=0;
+                path1=myHelper(n-1,false,false);
+                path2=myHelper(n-1,false,true);
+                return dp[{{n,curTop},curBot}]=(path1+path2)%modval;
+            }
+            else{
+                 long long int path1=0;long long int path2=0;
+                path1=myHelper(n-1,false,false);
+                path2=myHelper(n-1,true,false);
+                return dp[{{n,curTop},curBot}]=(path1+path2)%modval;
+            }
+        }
+        long long int path=0;
+            path=myHelper(n-1,true,true);
+            return dp[{{n,curTop},curBot}]=path%modval;
+        
+    }
+    int numTilings(int n) {
+         long long int retans=myHelper(n,true,true);
+        return (int)retans;
+    }
+};

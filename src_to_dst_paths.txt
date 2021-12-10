@@ -1,0 +1,48 @@
+class Solution {
+public:
+    map<int,vector<vector<int>>> dp;
+    map<int,vector<int>> matrix;
+    vector<vector<int>> AllPossiblePaths(int srcNode,int dstNode)
+    {
+        if(dp.count(srcNode)!=0)
+        {
+            return dp[srcNode];
+        }
+        if(srcNode==dstNode)
+        {
+            
+            vector<vector<int>> result(1,vector<int>{srcNode});
+            return dp[srcNode]=result;
+        }
+        vector<vector<int>> result;
+            for(auto eachNbr:matrix[srcNode])
+            {
+                vector<vector<int>> passPaths=AllPossiblePaths(eachNbr,dstNode);
+                if(passPaths.size()!=0)
+                {
+                    for(auto subPath:passPaths)
+                    {
+                        vector<int> temp{srcNode};
+                        for(auto eachN:subPath)
+                        {
+                            temp.push_back(eachN);
+                        }
+                        result.push_back(temp);
+                    }
+                }
+            }
+        return dp[srcNode]=result;
+        
+    }
+    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {
+        for(int i=0;i<graph.size();i++)
+        {
+            matrix[i]=graph[i];
+        }
+    
+        vector<vector<int>> result= AllPossiblePaths(0,graph.size()-1);
+     
+        return result;
+        
+    }
+};

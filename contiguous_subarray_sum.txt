@@ -1,0 +1,26 @@
+class Solution:
+    def checkSubarraySum(self, nums: List[int], k: int) -> bool:
+        m={}
+        cursum=0
+        rem=0
+        prev_rem=-1
+        for i in range(len(nums)):
+            cursum+=nums[i]
+            rem=cursum%k
+            if rem==0 and i!=0:
+                return True
+            elif prev_rem!=rem:
+                if rem in m.keys():
+                    return True
+                else:
+                    m[rem]=1
+                    prev_rem=rem
+            else:
+                if rem in m.keys() and m[rem]>1:
+                    return True
+                else:
+                    prev_rem=rem
+                    m[rem]=m[rem]+1
+        return False
+            
+        

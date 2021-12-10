@@ -1,0 +1,91 @@
+
+class trie{
+    public:
+    trie *children[26];
+    bool terminal;
+    trie(){
+        for(int i=0;i<26;i++)
+        {
+            this->children[i]=NULL;
+            this->terminal= false;
+        }
+    }
+};
+void buildTree(trie* &root,string s)
+{
+    trie *temp=root;
+    for(int i=s.size()-1;i>=0;i--)
+    {
+        int idx=s[i]-'a';
+        if(temp->children[idx]==NULL)
+        {
+            trie *newn=new trie();
+            temp->children[idx]=newn;
+        }
+        temp=temp->children[idx];
+        if(i==0)
+        {
+            temp->terminal=true;
+        }
+    }
+}
+bool suffixChecker(trie *root,string s)
+{
+    trie *temp=root;
+    for(int i=s.size()-1;i>=0;i--)
+    {
+        int idx=s[i]-'a';
+        if(temp->children[idx]==NULL)
+        {
+            return false;
+        }
+        if(temp->children[idx]->terminal)
+        {
+            return true;
+        }
+        temp=temp->children[idx];
+    }
+    return false;
+}
+class StreamChecker {
+public:
+    trie *root;
+    string ss;
+    int maxlen;
+    StreamChecker(vector<string>& words) {
+        ss="";
+        maxlen=0;
+        root=new trie();
+        for(auto eachWord:words)
+        {
+            buildTree(root,eachWord);
+            int newlen=eachWord.size();
+             if(newlen>maxlen)
+             {
+                 
+                 maxlen=newlen;
+             }
+        }
+    }
+    
+    bool query(char letter) {
+    
+      ss=ss+letter;
+        int length=ss.size();
+     
+        string subb=ss.substr(1,length);
+        if(length>maxlen)
+        {
+            ss=subb;
+      
+            length=maxlen;
+        }
+        return suffixChecker(root,ss);
+    }
+};
+
+/**
+ * Your StreamChecker object will be instantiated and called as such:
+ * StreamChecker* obj = new StreamChecker(words);
+ * bool param_1 = obj->query(letter);
+ */

@@ -1,0 +1,37 @@
+class Solution {
+public:
+    map<int,int> dp;
+    int my_helper(int low,int high)
+    {
+        if(dp.count(high-low+1)!=0)
+        {
+            return dp[high-low+1];
+        }
+        if(low==high)
+        {
+            return dp[high-low+1]=1;
+        }
+        int sum=0;
+        for(int i=low;i<=high;i++)
+        {
+            int lt_trees=1;int rt_trees=1;
+            if((i-1)>=low)
+            {
+                lt_trees=my_helper(low,i-1);
+            }
+            if((i+1)<=high)
+            {
+                rt_trees=my_helper(i+1,high);
+            }
+            int partans=lt_trees*rt_trees;
+            sum+=partans;
+        }
+        return dp[high-low+1]=sum;
+    }
+    int numTrees(int n) {
+        int low=0;int high=n-1;
+        return my_helper(low,high);
+        
+        
+    }
+};

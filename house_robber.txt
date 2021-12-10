@@ -1,0 +1,53 @@
+class Solution {
+public:
+
+    map<pair<bool,int>,int> dp;
+    int myHelper(vector<int> nums,int idx,int price,int prev)
+    {
+        
+        if(idx>=nums.size())
+        {
+            return 0;
+        }
+        if(idx==nums.size() -1 && prev)
+        {
+            return 0;
+        }
+        else if(idx==nums.size()-1 && !prev)
+        {
+            return nums[idx];
+        }
+        if(prev && dp.count({false,idx})!=0)
+        {
+            return dp[{false,idx}];
+        }
+        else if(!prev && (dp.count({false,idx})!=0) && (dp.count({true,idx})!=0))
+        {
+            return max(dp[{true,idx}],dp[{false,idx}]);
+        }
+        else{
+            if(!prev)
+            {
+                int priceOne=myHelper(nums,idx+1,price+nums[idx],true);
+                priceOne+=nums[idx];
+                dp[{true,idx}]=priceOne;
+            }
+            int priceTwo=myHelper(nums,idx+1,price,false);
+            dp[{false,idx}]=priceTwo;
+            if(prev)
+            {
+                return priceTwo;
+            }
+            else{
+                return max(priceTwo,dp[{true,idx}]);
+            }
+        }
+    }
+    
+    int rob(vector<int>& nums) {
+      
+        return myHelper(nums,0,0,false);
+        
+       
+    }
+};

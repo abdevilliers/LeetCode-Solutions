@@ -1,0 +1,58 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    map<TreeNode *,int> dp1;
+    map<TreeNode *,int> dp2;
+    int myHelper(TreeNode *root,bool parent)
+    {
+        if(root==NULL){
+            return 0;
+        }
+        else if(parent && dp1.count(root)!=0)
+        {
+            return dp1[root];
+        }
+        else if(!parent && dp2.count(root)!=0)
+        {
+            return dp2[root];
+        }
+        int partans1,partans2,partans3,partans4;
+        partans1=0;partans2=0;partans3=0;partans4=0;
+        if(!parent)
+        {
+            partans1=myHelper(root->left,true);
+            partans2=myHelper(root->right,true);
+            partans1+=partans2;
+            partans1+=root->val;
+        }
+        partans3=myHelper(root->left,false);
+        partans4=myHelper(root->right,false);
+        partans3+=partans4;
+        int result=0;
+        if(parent)
+        {
+            result=partans3;
+            return dp1[root]=result;
+        }
+        else{
+            
+            result = max(partans1,partans3);
+            return dp2[root]=result;
+        }
+        return 0;
+    }
+    
+    int rob(TreeNode* root) {
+        return myHelper(root,false);
+    }
+};

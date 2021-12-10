@@ -1,0 +1,88 @@
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<TreeNode *> myHelper(int low,int high,vector<int> arr)
+    {
+        if(low==high)
+        {
+            TreeNode *newn=new TreeNode(arr[low]);
+            vector<TreeNode *> retans;
+            retans.push_back(newn);
+            return retans;
+        }
+        vector<TreeNode *> retans;
+        
+        for(int i=low;i<=high;i++)
+        {
+             vector<TreeNode *> lt_trees;
+        vector<TreeNode *> rt_trees;
+            if(i-1>=0)
+            {
+              lt_trees=myHelper(low,i-1,arr);  
+            }
+            if((i+1)<=high)
+            {
+                rt_trees=myHelper(i+1,high,arr);
+            }
+            if(lt_trees.size()==0)
+            {
+                if(rt_trees.size()==0)
+                {
+                    TreeNode *root=new TreeNode(arr[i]);
+                    retans.push_back(root);
+                }
+                else{
+                    for(auto each_right:rt_trees)
+                    {
+                        TreeNode *root=new TreeNode(arr[i]);
+                        root->right=each_right;
+                        retans.push_back(root);
+                    }
+                }
+            }
+            else{
+                if(rt_trees.size()==0)
+                {
+                    for(auto each_lt:lt_trees)
+                    {
+                        TreeNode *root=new TreeNode(arr[i]);
+                        root->left=each_lt;
+                        retans.push_back(root);
+                    }
+                
+                }
+                else{
+                    for(auto each_lt:lt_trees)
+                    {
+                        for(auto each_rt:rt_trees)
+                        {
+                            TreeNode *root=new TreeNode(arr[i]);
+                            root->left=each_lt;root->right=each_rt;
+                            retans.push_back(root);
+                        }
+                    }
+                }
+            }
+        }
+        return retans;
+    }
+    vector<TreeNode*> generateTrees(int n) {
+      vector<int> arr;
+        for(int i=1;i<=n;i++)
+        {
+            arr.push_back(i);
+        }
+        return myHelper(0,n-1,arr);
+        
+    }
+};

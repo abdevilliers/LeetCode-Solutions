@@ -1,0 +1,66 @@
+class Solution {
+public:
+    vector<vector<int>> matrix;
+    vector<vector<int>> dp;
+    int pathTraverse(int srcx,int srcy,int dstx,int dsty)
+    {
+        if(dp[srcx][srcy]!=-1)
+        {
+            return dp[srcx][srcy];
+        }
+        if(srcx==dstx  && dstx==dsty)
+        {
+          
+            return matrix[dstx][dsty];
+        }
+      
+     vector<int> possPaths;
+       if(srcy+1<matrix[0].size()){
+        possPaths.push_back(pathTraverse(srcx,srcy+1,dstx,dsty));}
+        if(srcx+1<matrix.size()){
+            possPaths.push_back(pathTraverse(srcx+1,srcy,dstx,dsty));}
+        
+        if(possPaths.size()==0)
+        {
+            return dp[srcx][srcy]=matrix[srcx][srcy];
+        }
+        if(possPaths.size()==1)
+        {
+            return dp[srcx][srcy]=matrix[srcx][srcy]+possPaths[0];
+        }
+        int minAns=possPaths[0];
+        for(auto eachPath:possPaths)
+        {
+            minAns=min(minAns,eachPath);
+        }
+        return dp[srcx][srcy]=(minAns+matrix[srcx][srcy]);
+    }
+    int minPathSum(vector<vector<int>>& grid) {
+        matrix=grid;
+        dp.resize(grid.size(),vector<int>(grid[0].size(),-1));
+      for(int col=grid[0].size()-1;col>=0;col--)
+      {
+          if(col==grid[0].size()-1)
+          {
+              dp[grid.size()-1][col]=grid[grid.size()-1][col];
+          }
+          else{
+              dp[grid.size()-1][col]=grid[grid.size()-1][col]+dp[grid.size()-1][col+1];
+          }
+      }
+        for(int row=grid.size()-1;row>=0;row--)
+        {
+            if(row==grid.size()-1)
+            {
+                dp[row][grid[0].size()-1]=grid[row][grid[0].size()-1];
+            }
+            else{
+                int n=grid[0].size()-1;
+                dp[row][n]=grid[row][n]+dp[row+1][n];
+            }
+        }
+        int result=pathTraverse(0,0,grid.size()-1,grid[0].size()-1);
+      
+        return result;
+    }
+};
