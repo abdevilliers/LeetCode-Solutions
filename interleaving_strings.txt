@@ -1,0 +1,66 @@
+class Solution {
+public:
+    string stringa,stringb,stringc;
+    int n,m,k;
+    map<pair<pair<int,int>,int>,int> cache;
+    bool myHelper(int firstidx,int secondidx,int thirdidx)
+    {
+        int k=0;
+        int n=0;
+        int m=0;
+        k=stringc.size();
+        n=stringa.size();
+        m=stringb.size();
+          //cout<<firstidx<<" : "<<secondidx<<" : "<<thirdidx<<endl;
+      
+        if(thirdidx==k)
+        {
+            if(firstidx==n && secondidx==m)
+            {
+                return true;
+            }
+            else{
+                return false;
+            }
+        }
+        if(cache.count({{firstidx,secondidx},thirdidx})!=0)
+        {
+            return cache[{{firstidx,secondidx},thirdidx}];
+        }
+        bool partans1=false;bool partans2=false;
+      
+        if(firstidx<n && stringa[firstidx]==stringc[thirdidx])
+        {
+            //cout<<stringa[firstidx]<<" : "<<stringc[thirdidx]<<endl;
+          partans1=myHelper(firstidx+1,secondidx,thirdidx+1);
+        }
+        if(partans1)
+        {
+            return cache[{{firstidx,secondidx},thirdidx}]=true;
+        }
+        if(secondidx<m && stringb[secondidx]==stringc[thirdidx])
+        {
+              //cout<<stringb[secondidx]<<" : "<<stringc[thirdidx]<<endl;
+            partans2=myHelper(firstidx,secondidx+1,thirdidx+1);
+        }
+        return cache[{{firstidx,secondidx},thirdidx}]=partans2;
+    }
+    bool isInterleave(string s1, string s2, string s3) {
+        stringa=s1;
+        stringb=s2;
+        stringc=s3;
+        //cout<<stringa<<" is stringa"<<endl;
+        ///cout<<stringb<<" is stringb"<<endl;
+        //cout<<stringc<<" is stringc"<<endl;
+        int n=s1.size();int m=s2.size();
+        int k=s3.size();
+        if(n+m!=k)
+        {
+            return false;
+        }
+        //out<<n<<" l "<<m<<" l "<<k<<endl;
+       // cout<<"reached here"<<endl;
+        return myHelper(0,0,0);
+        
+    }
+};

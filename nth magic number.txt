@@ -1,0 +1,28 @@
+def calcHCF(a,b):
+    if b==0:
+        return a
+    return calcHCF(b,a%b)
+def calcLCM(a,b):
+    return int(((a*b)/calcHCF(a,b)))
+class Solution:
+    def nthMagicalNumber(self, n: int, a: int, b: int) -> int:
+        start=min(a,b)
+        end=min(a,b)*n
+        modul=int(pow(10,9)+7)
+        lcmans=calcLCM(a,b)
+        while start<=end:
+            mid=start+(end-start)/2
+            mid=int(mid)
+            noOfDiv=int(mid/a)+int(mid/b)-int(mid/lcmans)
+            if noOfDiv==n:
+                if mid%a==0 or mid%b==0:
+                    return mid%modul
+                ans_1=mid-mid%a
+                ans_2=mid-mid%b
+                return max(ans_1,ans_2)%modul
+            elif noOfDiv<n:
+                start=mid+1
+            else:
+                end=mid-1
+        return -1
+        

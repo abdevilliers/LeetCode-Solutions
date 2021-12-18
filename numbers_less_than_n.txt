@@ -1,0 +1,106 @@
+class Solution {
+public:
+ 
+    int digitsCalc(int num)
+    {
+        
+            
+        int counter=0;
+        while(num>0)
+        {
+            counter++;
+            num/=10;
+        }
+        return counter;
+    }
+    int myHelper(vector<int> arr1,vector<int> arr2,int idx)
+    {
+        int newArrSize=arr2.size();
+        int digitsSize=arr1.size();
+        /*
+        for(auto val:arr1)
+        {
+            cout<<"arr1 val: "<<val<<endl;
+        }
+        for(auto val:arr2)
+        {
+            cout<<"arr2 val: "<<val<<endl;
+        }
+        */
+        if(idx==newArrSize-1)
+        {
+            int newIdx=find(arr1.begin(),arr1.end(),arr2[idx])-arr1.begin();
+            bool isPresent=newIdx!=digitsSize;
+            if(isPresent)
+            {
+                return newIdx+1;
+            }
+            newIdx=upper_bound(arr1.begin(),arr1.end(),arr2[idx])-arr1.begin();
+            return newIdx;
+        }
+          int newIdx=find(arr1.begin(),arr1.end(),arr2[idx])-arr1.begin();
+        bool isPresent=newIdx!=digitsSize;
+        if(isPresent)
+        {
+            int retans=0;
+            int noOf=newIdx;
+            if(noOf<0)
+            {
+                noOf=0;
+            }
+            retans=noOf*(pow(digitsSize,newArrSize-idx-1));
+            retans+=myHelper(arr1,arr2,idx+1);
+            return retans;
+        }
+        int retans=0;
+        newIdx=upper_bound(arr1.begin(),arr1.end(),arr2[idx])-arr1.begin();
+        int noOf=newIdx;
+        return newIdx*(pow(digitsSize,newArrSize-idx-1));
+      
+    }
+    int atMostNGivenDigitSet(vector<string>& digits, int n) {
+        int digitSize=digits.size();
+        int noOfDigits=digitsCalc(n);
+        vector<int> newArr(noOfDigits,-1);
+        int newArrSize=newArr.size();
+        int digitsSize=digits.size();
+        int ptr=noOfDigits-1;
+        int num_temp=n;
+        vector<int> arr1;
+       // cout<<noOfDigits<<" is the number of digits"<<endl;
+        for(auto eachDig:digits)
+        {
+            arr1.push_back(eachDig[0]-'0');
+        }
+        vector<int> arr2;
+        for(int i=newArrSize-1;i>=0;i--)
+        {
+            int dig=num_temp%10;
+            newArr[i]=dig;
+            num_temp/=10;
+        }
+        arr2=newArr;
+        /*
+        for(auto eachDig:newArr)
+        {
+            cout<<eachDig<<" ";
+        }
+         cout<<endl;
+         */
+        int retans=0;
+        for(int i=1;i<=noOfDigits;i++)
+        {
+            if(i!=noOfDigits)
+            {
+                int diffNos=pow(digitsSize,i);
+                retans+=diffNos;
+            }
+            else{
+               // cout<<retans<<endl;
+                retans+=myHelper(arr1,arr2,0);
+            }
+        }
+        return retans;
+        
+    }
+};
