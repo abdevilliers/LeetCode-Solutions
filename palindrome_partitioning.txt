@@ -1,0 +1,66 @@
+class Solution {
+public:
+    map<int,vector<vector<string>>> dp;
+    string stt;
+    int n;
+    bool isPalindrome(string st)
+    {
+        int i=0;
+        int j=st.size()-1;
+        while(i<=j)
+        {
+            if(st[i]!=st[j])
+            {
+                return false;
+            }
+            i++;j--;
+        }
+        return true;
+    }
+    vector<vector<string>> myHelper(int idx,string s)
+    {
+      
+        if(idx==n)
+        {
+            vector<vector<string>> temp;
+            return temp;
+        }
+       if(dp.count(idx)!=0)
+       {
+           return dp[idx];
+           
+       }
+        vector<vector<string>> finans;
+        for(int length=1;length+idx<=n;length++)
+        {
+            string curSubStr=s.substr(idx,length);
+            if(isPalindrome(curSubStr))
+            {
+                vector<vector<string>> retans=myHelper(idx+length,s);
+                if(retans.size()==0)
+                {
+                    vector<string> tempans(1,curSubStr);
+                    finans.push_back(tempans);
+                    continue;
+                }
+                for(auto eachVec:retans)
+                {
+                    vector<string> someans;
+                    someans.push_back(curSubStr);
+                    for(auto eachStt:eachVec)
+                    {
+                        someans.push_back(eachStt);
+                    }
+                    finans.push_back(someans);
+                }
+            }
+        }
+        return dp[idx]=finans;
+    }
+    vector<vector<string>> partition(string s) {
+        string stt="";
+        stt+=s;
+        n=stt.size();
+        return myHelper(0,s);
+    }
+};

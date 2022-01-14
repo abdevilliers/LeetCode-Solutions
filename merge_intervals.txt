@@ -1,0 +1,42 @@
+class Solution {
+public:
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        sort(intervals.begin(),intervals.end());
+        stack<pair<int,int>> st;
+        int n=intervals.size();
+        for(int i=0;i<n;i++)
+        {
+            if(st.empty())
+            {
+                st.push({intervals[i][0],intervals[i][1]});
+                continue;
+            }
+            else{
+                pair<int,int> curTop=st.top();
+                 int low=intervals[i][0];
+                int high=intervals[i][1];
+                if(low>=curTop.first && low<=curTop.second)
+                {
+                    st.pop();
+                    int newlow=curTop.first;
+                    int newhigh=max(high,curTop.second);
+                    st.push({newlow,newhigh});
+                }
+                else{
+                    st.push({intervals[i][0],intervals[i][1]});
+                }
+                
+            }
+        }
+        vector<vector<int>> retans(st.size(),vector<int>{-1});
+        int ptr=st.size()-1;
+        while(!st.empty())
+        {
+            vector<int> temp{st.top().first,st.top().second};
+            retans[ptr--]=temp;
+            st.pop();
+        }
+        return retans;
+        
+    }
+};

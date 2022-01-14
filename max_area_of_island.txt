@@ -1,0 +1,64 @@
+class Solution {
+public:
+    int n,m;
+    vector<vector<int>> mat;
+    vector<vector<int>> vis;
+    int dfs(int x,int y)
+    {
+        queue<pair<int,int>> myq;
+        myq.push({x,y});
+        vis[x][y]=1;
+        int counter=1;
+        while(!myq.empty())
+        {
+            pair<int,int> curCell=myq.front();myq.pop();
+            int curx=curCell.first;
+            int cury=curCell.second;
+            if(curx-1>=0 && vis[curx-1][cury]==0 && mat[curx-1][cury]==1)
+            {
+                myq.push({curx-1,cury});
+                counter++;
+                vis[curx-1][cury]=1;
+            }
+              if(curx+1<n && vis[curx+1][cury]==0 && mat[curx+1][cury]==1)
+            {
+                myq.push({curx+1,cury});
+                counter++;
+                vis[curx+1][cury]=1;
+            }
+              if(cury-1>=0 && vis[curx][cury-1]==0 && mat[curx][cury-1]==1)
+            {
+                myq.push({curx,cury-1});
+                counter++;
+                vis[curx][cury-1]=1;
+            }
+              if(cury+1<m && vis[curx][cury+1]==0 && mat[curx][cury+1]==1)
+            {
+                myq.push({curx,cury+1});
+                counter++;
+                vis[curx][cury+1]=1;
+            }
+        }
+        return counter;
+    }
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        n=grid.size();m=grid[0].size();
+        mat.resize(n,vector<int>(m,-1));
+        mat=grid;
+        int maxIslandSize=0;
+        vis.resize(n,vector<int>(m,0));
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<m;j++)
+            {
+                if(vis[i][j]==0 && grid[i][j]==1)
+                {
+                    int islandSize=dfs(i,j);
+                    maxIslandSize=max(maxIslandSize,islandSize);
+                }
+            }
+        }
+        return maxIslandSize;
+        
+    }
+};
